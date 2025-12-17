@@ -7,7 +7,11 @@ A plugin that supercharges Claude Code with specialized skills for MongoDB, Expr
 ## Installation
 
 ```bash
-/plugin install 9tykeshav/mern-ninja-cc
+# Step 1: Add the marketplace (one-time)
+/plugin marketplace add 9tykeshav/mern-ninja-marketplace
+
+# Step 2: Install the plugin
+/plugin install mern-ninja@mern-ninja-marketplace
 ```
 
 ## Skills
