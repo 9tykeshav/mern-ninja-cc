@@ -1,68 +1,68 @@
 # MERN Ninja
 
-MERN stack mastery tools for Claude Code. Currently includes a comprehensive code reviewer for MongoDB, Express, React, and Node.js projects.
+> MERN stack mastery tools for [Claude Code](https://claude.ai/claude-code)
+
+A plugin that supercharges Claude Code with specialized skills for MongoDB, Express, React, and Node.js development.
 
 ## Installation
 
-### Claude Code
-
 ```bash
-/plugin install mern-ninja
+/plugin install 9tykeshav/mern-ninja-cc
 ```
 
-## Available Skills
-
-### `mern-ninja:code-reviewer`
-
-Reviews MERN stack code for security vulnerabilities, performance issues, best practice violations, and architectural concerns.
+## Skills
 
 ### `mern-ninja:backend-test-writer`
 
-Generates comprehensive backend tests for Express routes, MongoDB models, Node services, and utilities.
+Generates comprehensive backend tests with smart defaults and zero config.
 
-**Usage:**
-
+**Just ask:**
 ```
 Generate tests for my user routes
 Write tests for the auth service
 Create tests for my User model
 ```
 
-**What it generates:**
+**What it does:**
 
-| File Type | Test Type | Coverage |
+| File Type | Test Type | Approach |
 |-----------|-----------|----------|
 | Routes/Controllers | Integration | Supertest + mongodb-memory-server |
 | Services | Unit | Mocked dependencies |
-| Models | Unit | Validation, methods |
-| Middleware | Unit | Request/response mocking |
+| Models | Unit | Validation, methods, toJSON |
+| Middleware | Unit | Mock req/res/next |
 | Utilities | Unit | Pure function tests |
 
 **Features:**
 - Auto-detects test framework (Jest/Vitest/Mocha)
-- Matches project's test file convention
-- Generates comprehensive coverage (success + errors + edge cases)
-- Includes setup/teardown boilerplate
+- Gap analysis on existing tests before generating new ones
+- Priority levels (P0/P1/P2) for each test case
+- Domain-specific edge cases (dates → DST/timezone, money → precision)
+- Setup/teardown boilerplate included
 
-**Usage:**
+---
 
+### `mern-ninja:code-reviewer`
+
+Reviews MERN stack code for security, performance, and best practices.
+
+**Just ask:**
 ```
 Review my authentication code
 Check this Express API for security issues
-Review my React components for performance
 Audit this MongoDB schema
 ```
 
-**What it checks:**
+**Review priorities:**
 
 | Priority | Focus |
 |----------|-------|
 | 1. Security | Injection, XSS, auth flaws, secrets, CORS |
-| 2. Performance | N+1 queries, re-renders, blocking ops, indexes |
+| 2. Performance | N+1 queries, re-renders, blocking ops |
 | 3. Best Practices | Error handling, async patterns, cleanup |
-| 4. Architecture | API design, state sync, type alignment |
+| 4. Architecture | API design, state sync, type safety |
 
-**Output format:**
+**Sample output:**
 
 ```markdown
 # MERN Code Review
@@ -80,31 +80,29 @@ Audit this MongoDB schema
 ## What's Good
 - Proper JWT refresh flow
 - Consistent error responses
-
----
-**Ready to fix these?** I'll start with Critical issues.
 ```
 
-## Reference Files
+## Reference Guides
 
-The code-reviewer skill includes detailed reference guides (~1,180 lines total):
+The plugin includes ~1,500 lines of curated best practices:
 
-| File | Coverage |
-|------|----------|
-| react.md | Hooks, re-renders, security, testing |
-| security.md | OWASP Top 10, MERN-specific vulnerabilities |
-| nodejs.md | Async patterns, event loop, memory |
-| express.md | Middleware, auth, error handling |
-| mongodb.md | Schema design, indexing, queries |
-| fullstack.md | API design, auth flows, state sync |
+| Guide | Coverage |
+|-------|----------|
+| `security.md` | OWASP Top 10, MERN-specific vulnerabilities |
+| `react.md` | Hooks, re-renders, security, testing |
+| `nodejs.md` | Async patterns, event loop, memory |
+| `express.md` | Middleware, auth, error handling |
+| `mongodb.md` | Schema design, indexing, queries |
+| `fullstack.md` | API design, auth flows, state sync |
+| `test-patterns.md` | Complete test examples by file type |
+| `test-setup.md` | Jest config, fixtures, mocking |
 
 ## Roadmap
 
-Future skills planned:
-- `mern-ninja:scaffolder` - Generate MERN boilerplate
-- `mern-ninja:migrator` - Database migration helper
-- `mern-ninja:frontend-test-writer` - React component test generation
+- [ ] `mern-ninja:scaffolder` – Generate MERN boilerplate
+- [ ] `mern-ninja:migrator` – Database migration helper
+- [ ] `mern-ninja:frontend-test-writer` – React component tests
 
 ## License
 
-MIT License - see LICENSE file
+MIT
