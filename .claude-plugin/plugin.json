@@ -1,0 +1,13 @@
+{
+  "name": "mern-ninja",
+  "description": "MERN stack mastery tools - code review, security audits, and best practices for MongoDB, Express, React, and Node.js",
+  "version": "1.0.0",
+  "author": {
+    "name": "Keshav Nautiyal",
+    "email": ""
+  },
+  "homepage": "https://github.com/keshavnautiyal/mern-ninja",
+  "repository": "https://github.com/keshavnautiyal/mern-ninja",
+  "license": "MIT",
+  "keywords": ["mern", "code-review", "security", "mongodb", "express", "react", "nodejs", "ninja", "best-practices", "testing", "jest", "supertest", "unit-tests", "integration-tests"]
+}
