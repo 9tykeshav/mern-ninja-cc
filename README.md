@@ -86,6 +86,39 @@ Audit this MongoDB schema
 - Consistent error responses
 ```
 
+---
+
+### `mern-ninja:mongodb-query-patterns`
+
+Data-flow-first approach to writing MongoDB/Mongoose queries that scale.
+
+**Triggers automatically when you:**
+```
+Write a new Mongoose query
+Wire data between services
+Build an endpoint that reads/writes to MongoDB
+Pass an ID where a document could be passed instead
+```
+
+**Core principle:** The best query is the one you never make. Pass documents through the call stack — don't re-fetch what the caller already has.
+
+**Patterns covered:**
+
+| Pattern | What It Prevents |
+|---------|-----------------|
+| Pass data through services | Same document fetched 3-4x across service boundaries |
+| Batch with `$in` + Map | N+1 loops that fire one query per item |
+| `.select()` + `.lean()` | Full-document fetches with Mongoose overhead on read paths |
+| Avoid `.populate()` on lists | Hidden N+1 queries behind a clean API |
+| Direct `updateOne` | Fetch-modify-save round-trips for simple field updates |
+| `bulkWrite` | Sequential update loops |
+| Hoist common queries | Duplicate queries across if/else branches |
+| Index filter fields | Full collection scans (COLLSCAN) |
+
+**Includes:** Pre-commit checklist, common mistakes table, and the "every query must justify its existence" decision framework.
+
+---
+
 ## Reference Guides
 
 The plugin includes ~1,500 lines of curated best practices:
