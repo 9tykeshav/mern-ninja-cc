@@ -57,7 +57,7 @@ When a query *is* justified, make it lean:
 
 | Rule | How | Why |
 |---|---|---|
-| Project only needed fields | `.select('name email status')` | Full documents carry every field — bloats memory and network |
+| Project only needed fields | `.select('name email status')` | Full documents carry every field — list exactly what the caller needs, never widen "just in case" |
 | Return plain objects for reads | `.lean()` | Skips Mongoose hydration — 2-5x faster for read-only paths |
 | Ensure filter fields are indexed | `schema.index({ field: 1 })` | Without an index, MongoDB scans every document (COLLSCAN) |
 | Batch related reads | `.find({ _id: { $in: ids } })` + Map | N round-trips collapse to 1 |
@@ -229,6 +229,26 @@ await User.updateOne(
 
 Use `findById` + `.save()` only when you need validation, middleware hooks, or optimistic concurrency.
 
+### Run Independent Queries Concurrently
+
+When you need data from multiple collections and the queries don't depend on each other, run them in parallel.
+
+```typescript
+// WRONG — sequential, each waits for the previous
+const users = await User.find({ _id: { $in: userIds } }).select('name email').lean();
+const responses = await FormResponse.find({ eventId }).select('userId answers').lean();
+const reviews = await Review.find({ eventId }).select('userId rating').lean();
+
+// RIGHT — concurrent, all fire at once
+const [users, responses, reviews] = await Promise.all([
+  User.find({ _id: { $in: userIds } }).select('name email').lean(),
+  FormResponse.find({ eventId }).select('userId answers').lean(),
+  Review.find({ eventId }).select('userId rating').lean(),
+]);
+```
+
+Use `Promise.all` whenever queries don't depend on each other's results. Three 100ms queries run concurrently take 100ms total, not 300ms.
+
 ### Index Every Filter Field
 
 ```typescript
@@ -257,7 +277,9 @@ Before committing any code that touches the database:
 [ ] Updates that don't need hooks use updateOne/bulkWrite, not findById + save
 [ ] Filter fields have corresponding schema.index() definitions
 [ ] Multiple writes use bulkWrite, not a loop
+[ ] Independent queries run concurrently with Promise.all
 [ ] Same query doesn't appear in multiple code branches — hoisted above
+[ ] .select() lists exactly the fields needed — not widened "just in case"
 ```
 
 ## Common Mistakes
@@ -271,5 +293,7 @@ Before committing any code that touches the database:
 | `.lean()` then calling `.save()` | `.lean()` returns plain objects — no Mongoose methods available |
 | Batch `$in` + `array.find()` for lookup | O(n²) — always use a Map for O(1) lookups |
 | Prefetch param without DB fallback | Breaks webhook/cron callers that don't have the pre-fetched data |
+| Sequential independent queries | Use `Promise.all` — 3 queries at 100ms each take 100ms, not 300ms |
+| Widening `.select()` "just in case" | Fetch only what the caller actually uses — extra fields waste bandwidth |
 | Unbounded `.find()` without limit | Risk of loading entire collection into memory |
 | Index on rarely-queried field | Indexes slow every write for no read benefit |
